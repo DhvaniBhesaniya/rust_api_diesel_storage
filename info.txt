@@ -1,0 +1,222 @@
+sudo apt-get update
+sudo apt-get install libsqlite3-dev
+
+apt show libsqlite3-dev
+
+cargo install diesel_cli --no-default-features --features sqlite
+
+
+
+
+
+
+
+
+🗃️ Step 2.2: Setup Diesel
+bash
+Copy
+Edit
+diesel setup
+This requires a .env file like:
+
+env
+Copy
+Edit
+DATABASE_URL=./task_manager.db
+
+
+
+🛠️ Step 2.3: Create a migration
+bash
+Copy
+Edit
+diesel migration generate create_tasks
+
+
+
+Edit the generated migration file:
+
+sql
+Copy
+Edit
+-- up.sql
+CREATE TABLE tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    completed BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- down.sql
+DROP TABLE tasks;
+Apply the migration:
+
+bash
+Copy
+Edit
+diesel migration run
+
+
+
+
+// ----------------------------
+
+
+
+info : 
+
+libsqlite3-dev won't run in the terminal because it's not an executable program - it's a development package that contains:
+
+•  Header files (.h files)
+•  Static libraries (.a files) 
+•  Other development tools needed for compiling programs
+
+Think of it this way:
+•  libsqlite3-dev = tools for building programs that use SQLite
+•  sqlite3 = the actual program you run to interact with SQLite databases
+
+
+To run SQL in the terminal, you need to install the sqlite3 command-line tool:
+sudo apt-get install sqlite3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Code Structure Analysis
+
+Based on my analysis, here's the complete structure of your Rust Book Store API:
+
+Project Structure:
+
+rust_book_store_api/
+├── src/
+│   ├── main.rs          # Server entry point
+│   ├── models/mod.rs    # Data models (Task, NewTask)
+│   ├── handlers/mod.rs  # Route handlers/controllers
+│   └── schema/mod.rs    # Database schema
+├── migrations/          # Diesel database migrations
+├── Cargo.toml          # Dependencies
+├── .env                # Environment variables
+└── task_manager.db     # SQLite database
+
+
+
+
+
+API Details:
+•  Framework: Actix-web
+•  Database: SQLite with Diesel ORM
+•  Server: Runs on 0.0.0.0:8080
+•  Models: Task management system (not books as the name suggests)
+
+Available Endpoints:
+
+| Method | Endpoint      | Description        | Request Body |
+|--------|---------------|-------------------|--------------|
+| GET    | /tasks      | Get all tasks     | None         |
+| POST   | /tasks      | Create new task   | JSON         |
+| PUT    | /tasks/{id} | Update task       | JSON         |
+| DELETE | /tasks/{id} | Delete task       | None         |
+
+Data Models:
+
+Task (Response):
+
+{
+  "id": 1,
+  "title": "Sample task",
+  "completed": false,
+  "created_at": "2025-08-01T12:00:00"
+}
+
+NewTask (Request):
+
+{
+  "title": "Task title"
+}
+
+
+
+How to Send Requests
+
+1. Start the Server:
+
+cargo run
+
+
+2. API Request Examples:
+
+Get all tasks:
+
+
+curl -X GET http://localhost:8080/tasks
+
+
+Create a new task:
+
+curl -X POST http://localhost:8080/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Read a new book"}'
+
+Update a task:
+
+curl -X PUT http://localhost:8080/tasks/1 \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Updated task title"}'
+
+
+  Delete a task:
+
+  curl -X DELETE http://localhost:8080/tasks/1
+
+
+  3. Using Postman/Insomnia:
+•  Base URL: http://localhost:8080
+•  Set Content-Type: application/json for POST/PUT requests
+•  Use the JSON format shown above for request bodies
+
+4. Test with HTTPie:
+
+# Get tasks
+http GET localhost:8080/tasks
+
+# Create task
+http POST localhost:8080/tasks title="New book to read"
+
+# Update task
+http PUT localhost:8080/tasks/1 title="Updated title"
+
+# Delete task
+http DELETE localhost:8080/tasks/1
