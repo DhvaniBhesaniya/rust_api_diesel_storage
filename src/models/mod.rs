@@ -14,3 +14,11 @@ pub struct Task {
 pub struct NewTask {
     pub title: String,
 }
+
+#[derive(AsChangeset, Deserialize)]
+#[diesel(table_name = crate::schema::tasks)]
+pub struct UpdateTask {
+    pub title: Option<String>,
+    pub completed: Option<bool>,
+    // add other fields as needed
+}
