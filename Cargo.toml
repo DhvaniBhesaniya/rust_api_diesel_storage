@@ -12,4 +12,4 @@ dotenvy = "0.15" # For .env support
 uuid = { version = "1", features = ["v4"] }
 actix-rt = "2"
 chrono = { version = "0.4", features = ["serde"] }
-
+actix-cors = "0.7"
