@@ -1,4 +1,4 @@
-# 📚 Rust Book Store API
+# 📚 Rust Task Management API
 
 A simple task management REST API built with **Actix-web**, **Diesel ORM**, and **SQLite**.
 
