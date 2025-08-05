@@ -3,7 +3,7 @@ pub mod models;
 pub mod schema;
 
 use actix_cors::Cors;
-use actix_web::http::header;
+use actix_web::http::header::{self, ORIGIN};
 use actix_web::{App, HttpServer, web};
 use diesel::SqliteConnection;
 use diesel::r2d2::{self, ConnectionManager}; // or PgConnection
@@ -20,7 +20,7 @@ async fn main() -> std::io::Result<()> {
         .build(manager)
         .expect("Failed to create pool.");
 
-    let server_addr = ("0.0.0.0", 8080);
+    let server_addr = ("0.0.0.0", 1234);
 
     println!(
         "🚀 Server running at http://{}:{}",
@@ -31,12 +31,11 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(
                 Cors::default()
-                    // .allow_any_origin()
-                    //     .allow_any_method()
-                    //     .allow_any_header()
-                    .allowed_origin("http://localhost:3000")
-                    .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
-                    .allowed_headers(vec![header::CONTENT_TYPE, header::ACCEPT])
+                    // .allow_any_origin() // <--- Allow all origins
+                    .allowed_origin("http://127.0.0.1:5500") // <--- Allow specific origin
+                    .allow_any_method()
+                    .allow_any_header()
+                    .supports_credentials()
                     .max_age(3600),
             )
             .app_data(web::Data::new(pool.clone()))
