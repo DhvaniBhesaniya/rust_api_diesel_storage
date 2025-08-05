@@ -3,7 +3,6 @@ pub mod models;
 pub mod schema;
 
 use actix_cors::Cors;
-use actix_web::http::header::{self, ORIGIN};
 use actix_web::{App, HttpServer, web};
 use diesel::SqliteConnection;
 use diesel::r2d2::{self, ConnectionManager}; // or PgConnection
